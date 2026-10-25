@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,10 +67,11 @@
 
 <div class="container mt-4">
 
-    <!-- Course name and description section -->
+    <!-- Course name and description -->
     <div class="jumbotron">
         <h1 class="display-4">{{ course.name }}</h1>
         <p class="lead">{{ course.description }}</p>
+
         {% if course.pub_date %}
             <p class="text-muted">Published: {{ course.pub_date }}</p>
         {% endif %}
@@ -85,6 +87,7 @@
                     Lesson {{ forloop.counter }}: {{ lesson.title }}
                 </h5>
             </div>
+
             <div class="card-body">
                 <p class="card-text">{{ lesson.content|linebreaks }}</p>
             </div>
@@ -118,7 +121,8 @@
                     <div class="card mb-3">
                         <div class="card-header bg-light">
                             <h5 class="mb-0">
-                                Question {{ forloop.counter }}: {{ question.content }}
+                                Question {{ forloop.counter }}:
+                                {{ question.question_text }}
                             </h5>
                         </div>
 
@@ -134,11 +138,13 @@
 
                                     <label class="form-check-label"
                                            for="choice_{{ choice.id }}">
-                                        {{ choice.content }}
+                                        {{ choice.choice_text }}
                                     </label>
                                 </div>
                             {% empty %}
-                                <p class="text-muted">No choices are available for this question.</p>
+                                <p class="text-muted">
+                                    No choices are available for this question.
+                                </p>
                             {% endfor %}
                         </div>
                     </div>
