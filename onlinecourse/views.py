@@ -1,4 +1,4 @@
-
+import logging
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-import logging
 
 from .models import Course, Enrollment, Question, Choice, Submission
 
@@ -169,7 +168,6 @@ def submit(request, course_id):
             enrollment=enrollment
         )
 
-        # Only accept choices belonging to questions in this course.
         valid_choices = Choice.objects.filter(
             id__in=selected_ids,
             question__course=course
@@ -195,39 +193,23 @@ def show_exam_result(request, course_id, submission_id):
         enrollment__course=course
     )
 
-    selected_ids = list(
-        submission.choices.values_list('id', flat=True)
-    )
+    # Get selected choices and IDs
+    choices = submission.choices.all()
+    selected_ids = list(choices.values_list('id', flat=True))
 
-    questions = course.question_set.prefetch_related('choice_set')
-    question_results = []
-    total_score = 0
-    max_score = 0
+    questions = course.question_set.all()
+    grade = 0
 
+    # Calculate total grade using question.is_get_score
     for question in questions:
-        max_score += question.grade
-
-        correct = question.is_get_score(selected_ids)
-
-        if correct:
-            total_score += question.grade
-
-        question_results.append({
-            'question': question,
-            'choices': question.choice_set.all(),
-            'is_correct': correct,
-            'selected_ids': selected_ids,
-            'grade': question.grade,
-            'score': question.grade if correct else 0,
-        })
+        if question.is_get_score(selected_ids):
+            grade += question.grade
 
     context = {
         'course': course,
         'submission': submission,
-        'question_results': question_results,
-        'total_score': total_score,
-        'max_score': max_score,
-        'passed': total_score >= max_score * 0.5 if max_score else False,
+        'choices': choices,
+        'grade': int(grade),
     }
 
     return render(
