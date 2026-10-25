@@ -1,4 +1,3 @@
-
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -56,7 +55,7 @@ urlpatterns = [
     path(
         'course/<int:course_id>/submission/<int:submission_id>/result/',
         views.show_exam_result,
-        name='exam_result'
+        name='show_exam_result'
     ),
 ]
 
