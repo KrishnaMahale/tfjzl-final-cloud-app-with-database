@@ -66,12 +66,12 @@
 
 <div class="container mt-4">
 
-    <!-- Course name and description -->
+    <!-- Course name and description section -->
     <div class="jumbotron">
         <h1 class="display-4">{{ course.name }}</h1>
         <p class="lead">{{ course.description }}</p>
         {% if course.pub_date %}
-            <p>Published: {{ course.pub_date }}</p>
+            <p class="text-muted">Published: {{ course.pub_date }}</p>
         {% endif %}
     </div>
 
@@ -80,7 +80,7 @@
 
     {% for lesson in course.lesson_set.all %}
         <div class="card mb-3">
-            <div class="card-header">
+            <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">
                     Lesson {{ forloop.counter }}: {{ lesson.title }}
                 </h5>
@@ -97,9 +97,9 @@
 
     <!-- Exam for authenticated users -->
     {% if user.is_authenticated %}
-        <hr>
+        <hr class="my-4">
 
-        <button class="btn btn-primary btn-block"
+        <button class="btn btn-primary btn-block mb-3"
                 type="button"
                 data-toggle="collapse"
                 data-target="#exam"
@@ -116,10 +116,9 @@
 
                 {% for question in course.question_set.all %}
                     <div class="card mb-3">
-                        <div class="card-header">
+                        <div class="card-header bg-light">
                             <h5 class="mb-0">
-                                Question {{ forloop.counter }}:
-                                {{ question.question_text }}
+                                Question {{ forloop.counter }}: {{ question.content }}
                             </h5>
                         </div>
 
@@ -135,11 +134,11 @@
 
                                     <label class="form-check-label"
                                            for="choice_{{ choice.id }}">
-                                        {{ choice.choice_text }}
+                                        {{ choice.content }}
                                     </label>
                                 </div>
                             {% empty %}
-                                <p>No choices are available for this question.</p>
+                                <p class="text-muted">No choices are available for this question.</p>
                             {% endfor %}
                         </div>
                     </div>
